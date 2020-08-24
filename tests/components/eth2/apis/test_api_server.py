@@ -4,12 +4,12 @@ from aiohttp.test_utils import RawTestServer, TestClient
 from eth_utils import encode_hex
 from libp2p.crypto.secp256k1 import create_new_key_pair
 import pytest
+from trinity.http.handlers.api_handler import APIHandler
+from trinity.protocol.bcc_libp2p.node import Node
 
 from eth2.beacon.tools.factories import BeaconChainFactory
 from eth2.beacon.types.attestations import Attestation
 from eth2.beacon.types.blocks import BeaconBlock
-from trinity.http.handlers.api_handler import APIHandler
-from trinity.protocol.bcc_libp2p.node import Node
 
 GET_METHOD = "GET"
 POST_METHOD = "POST"

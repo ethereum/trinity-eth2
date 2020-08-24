@@ -1,5 +1,4 @@
 import pytest
-
 from trinity.components.eth2.eth1_monitor.db import (
     BaseDepositDataDB,
     ListCachedDepositDataDB,

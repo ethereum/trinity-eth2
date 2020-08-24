@@ -2,6 +2,7 @@ import random
 
 from eth_utils import to_tuple
 import pytest
+from trinity.nodes.beacon.full import ChainDBBlockSink
 
 from eth2.beacon.chains.exceptions import SlashableBlockError
 from eth2.beacon.chains.testnet.medalla import BeaconChain
@@ -15,7 +16,6 @@ from eth2.beacon.types.blocks import BeaconBlock
 from eth2.beacon.types.eth1_data import Eth1Data
 from eth2.beacon.typing import Epoch, Slot
 from eth2.clock import Tick
-from trinity.nodes.beacon.full import ChainDBBlockSink
 
 
 @pytest.fixture(scope="module")

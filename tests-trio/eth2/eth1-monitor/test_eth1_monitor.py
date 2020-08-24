@@ -2,11 +2,6 @@ from async_service import background_trio_service
 from eth_utils import ValidationError
 from lahja import BroadcastConfig
 import pytest
-import trio
-from trio.testing import wait_all_tasks_blocked
-
-from eth2._utils.merkle.common import verify_merkle_branch
-from eth2.beacon.constants import DEPOSIT_CONTRACT_TREE_DEPTH
 from trinity.components.eth2.eth1_monitor.eth1_monitor import (
     Eth1Monitor,
     GetDepositRequest,
@@ -24,6 +19,11 @@ from trinity.components.eth2.eth1_monitor.factories import (
     ListCachedDepositDataDBFactory,
 )
 from trinity.tools.factories.db import AtomicDBFactory
+import trio
+from trio.testing import wait_all_tasks_blocked
+
+from eth2._utils.merkle.common import verify_merkle_branch
+from eth2.beacon.constants import DEPOSIT_CONTRACT_TREE_DEPTH
 
 
 @pytest.mark.trio

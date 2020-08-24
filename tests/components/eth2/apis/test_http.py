@@ -3,17 +3,17 @@ import tempfile
 
 from eth_utils import decode_hex
 import pytest
+from trinity.db.beacon.chain import AsyncBeaconChainDB
+from trinity.db.manager import DBClient, DBManager
+from trinity.http.handlers.rpc_handler import RPCHandler
+from trinity.rpc.main import RPCServer
+from trinity.rpc.modules import initialize_beacon_modules
 
 from eth2.beacon.fork_choice.higher_slot import HigherSlotScoring
 from eth2.beacon.state_machines.forks.serenity.configs import SERENITY_CONFIG
 from eth2.beacon.tools.builder.initializer import create_mock_genesis
 from eth2.beacon.tools.misc.ssz_vector import override_lengths
 from eth2.beacon.types.blocks import BeaconBlock, SignedBeaconBlock
-from trinity.db.beacon.chain import AsyncBeaconChainDB
-from trinity.db.manager import DBClient, DBManager
-from trinity.http.handlers.rpc_handler import RPCHandler
-from trinity.rpc.main import RPCServer
-from trinity.rpc.modules import initialize_beacon_modules
 
 
 @pytest.fixture

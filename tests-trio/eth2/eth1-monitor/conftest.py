@@ -6,14 +6,13 @@ from eth_tester import EthereumTester, PyEVMBackend
 import eth_utils
 import pytest
 import ssz
-from web3 import Web3
-from web3.providers.eth_tester import EthereumTesterProvider
-
 from trinity.components.eth2.eth1_monitor.configs import deposit_contract_json
 from trinity.components.eth2.eth1_monitor.eth1_data_provider import Web3Eth1DataProvider
 from trinity.components.eth2.eth1_monitor.eth1_monitor import Eth1Monitor
 from trinity.components.eth2.eth1_monitor.factories import DepositDataFactory
 from trinity.tools.factories.db import AtomicDBFactory
+from web3 import Web3
+from web3.providers.eth_tester import EthereumTesterProvider
 
 # Ref: https://github.com/ethereum/eth2.0-specs/blob/dev/deposit_contract/tests/contracts/conftest.py  # noqa: E501
 

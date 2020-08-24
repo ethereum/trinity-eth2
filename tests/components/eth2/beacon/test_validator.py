@@ -5,6 +5,8 @@ from eth.exceptions import BlockNotFound
 from eth_utils.toolz import partition_all
 from lahja import BroadcastConfig
 import pytest
+from trinity.components.eth2.beacon.slot_ticker import SlotTickEvent, TickType
+from trinity.components.eth2.beacon.validator import Validator
 
 from eth2.beacon.exceptions import NoCommitteeAssignment
 from eth2.beacon.helpers import compute_epoch_at_slot, compute_start_slot_at_epoch
@@ -21,8 +23,6 @@ from eth2.beacon.tools.builder.validator import (
 )
 from eth2.beacon.tools.factories import BeaconChainFactory
 from eth2.beacon.tools.misc.ssz_vector import override_lengths
-from trinity.components.eth2.beacon.slot_ticker import SlotTickEvent, TickType
-from trinity.components.eth2.beacon.validator import Validator
 
 override_lengths(MINIMAL_SERENITY_CONFIG)
 

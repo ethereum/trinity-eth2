@@ -11,6 +11,7 @@ from eth_typing import BLSPubkey, BLSSignature
 from eth_utils import decode_hex, encode_hex, humanize_hash, to_tuple
 from ssz.tools.dump import to_formatted_dict
 from ssz.tools.parse import from_formatted_dict
+from trinity._utils.trio_utils import Request, Response
 
 from eth2.beacon.chains.abc import BaseBeaconChain, advance_state_to_slot
 from eth2.beacon.constants import GENESIS_EPOCH
@@ -29,7 +30,6 @@ from eth2.beacon.types.states import BeaconState
 from eth2.beacon.typing import Bitfield, CommitteeIndex, Epoch, Root, Slot, Timestamp
 from eth2.clock import Clock
 from eth2.configs import Eth2Config
-from trinity._utils.trio_utils import Request, Response
 
 logger = logging.getLogger("eth2.api.http.validator")
 
