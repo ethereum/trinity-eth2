@@ -2,7 +2,6 @@ import asyncio
 import time
 
 import pytest
-
 from trinity.components.eth2.beacon.slot_ticker import SlotTicker, SlotTickEvent
 
 

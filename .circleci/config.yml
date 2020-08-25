@@ -8,9 +8,6 @@ common: &common
   steps:
     - checkout
     - run:
-        name: checkout fixtures submodule
-        command: git submodule update --init --recursive
-    - run:
         name: merge pull request base
         command: ./.circleci/merge_pr.sh
     - run:
@@ -23,7 +20,7 @@ common: &common
         when: on_fail
     - restore_cache:
         keys:
-          - cache-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./eth2/beacon/scripts/quickstart_state/keygen_16_validators.yaml" }}
+          - cache-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
         name: install libsnappy-dev
         command: sudo apt install -y libsnappy-dev
@@ -41,36 +38,7 @@ common: &common
           - ~/.local
           - ./eggs
           - .pytest_cache/v/eth2/bls/key-cache
-        key: cache-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./eth2/beacon/scripts/quickstart_state/keygen_16_validators.yaml" }}
-
-geth_steps: &geth_steps
-  working_directory: ~/repo
-  steps:
-    - checkout
-    - restore_cache:
-        keys:
-          - cache-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/build_geth.sh" }}
-    - run:
-        name: install libsnappy-dev
-        command: sudo apt install -y libsnappy-dev
-    - run:
-        name: install dependencies
-        command: pip install --user tox
-    - run:
-        name: build geth if missing
-        command: ./.circleci/build_geth.sh
-    - run:
-        name: run tox
-        command: ~/.local/bin/tox -r
-    - save_cache:
-        paths:
-          - .tox
-          - ~/.cache/pip
-          - ~/.local
-          - ./eggs
-          - ~/.ethash
-          - ~/.py-geth
-        key: cache-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/build_geth.sh" }}
+        key: cache-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 eth2_fixtures: &eth2_fixtures
   working_directory: ~/repo
@@ -89,7 +57,7 @@ eth2_fixtures: &eth2_fixtures
         when: on_fail
     - restore_cache:
         keys:
-          - cache-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/get_eth2_fixtures.sh" }}-{{ checksum "./eth2/beacon/scripts/quickstart_state/keygen_16_validators.yaml" }}
+          - cache-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/get_eth2_fixtures.sh" }}
     - run:
         name: install libsnappy-dev
         command: sudo apt install -y libsnappy-dev
@@ -111,7 +79,7 @@ eth2_fixtures: &eth2_fixtures
           - ./eggs
           - .pytest_cache/v/eth2/bls/key-cache
           - ./eth2-fixtures
-        key: cache-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/get_eth2_fixtures.sh" }}-{{ checksum "./.circleci/build_geth.sh" }}
+        key: cache-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}-{{ checksum "./.circleci/get_eth2_fixtures.sh" }}
 jobs:
   py38-lint:
     <<: *common
@@ -125,119 +93,6 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV: py37-lint
-  py38-lint-eth2:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-lint-eth2
-  py37-lint-eth2:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-lint-eth2
-
-  py37-docs:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-docs
-
-  py37-rpc-state-byzantium:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-byzantium
-  py37-rpc-state-constantinople:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-constantinople
-  py37-rpc-state-frontier:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-frontier
-  py37-rpc-state-homestead:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-homestead
-  py37-rpc-state-istanbul:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-istanbul
-  py37-rpc-state-petersburg:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-petersburg
-
-  py37-rpc-state-tangerine_whistle:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-tangerine_whistle
-  py37-rpc-state-spurious_dragon:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-spurious_dragon
-  py37-rpc-state-fork-transition:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-fork-transition
-
-  py38-eth1-core:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-eth1-core
-  py38-integration:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-integration
-  py37-sync_integration:
-    <<: *geth_steps
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-sync_integration
-          GETH_VERSION: v1.9.6
-  py37-long_run_integration:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-long_run_integration
-  py38-p2p:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-p2p
-  py38-p2p-trio:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-p2p-trio
   py38-eth2-core:
     <<: *common
     docker:
@@ -262,68 +117,19 @@ jobs:
       - image: circleci/python:3.8
         environment:
           TOXENV: py38-eth2-integration
-  py38-wheel-cli:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-wheel-cli
-  py38-eth1-components:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV: py38-eth1-components
   py38-eth2-trio:
     <<: *common
     docker:
       - image: circleci/python:3.8
         environment:
           TOXENV: py38-eth2-trio
+  py38-eth2-components:
+    <<: *common
+    docker:
+      - image: circleci/python:3.8
+        environment:
+          TOXENV: py38-eth2-components
 
-  py37-rpc-state-quadratic:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-quadratic
-  py37-rpc-state-sstore:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-sstore
-  py37-rpc-state-zero_knowledge:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-rpc-state-zero_knowledge
-
-  py37-eth1-core:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-eth1-core
-  py37-integration:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-integration
-  py37-p2p:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-p2p
-  py37-p2p-trio:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-p2p-trio
   py37-eth2-core:
     <<: *common
     docker:
@@ -348,18 +154,6 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV: py37-eth2-integration
-  py37-wheel-cli:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-wheel-cli
-  py37-eth1-components:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV: py37-eth1-components
   py37-eth2-components:
     <<: *common
     docker:
@@ -373,13 +167,6 @@ jobs:
         environment:
           TOXENV: py37-eth2-trio
 
-  docker-trinity-image-build-test:
-    machine: true
-    steps:
-      - checkout
-      - run: docker build -t ethereum/trinity:test-build -f ./docker/Dockerfile .
-      - run: docker run ethereum/trinity:test-build --help
-
   docker-trinity-beacon-image-build-test:
     machine: true
     steps:
@@ -392,55 +179,22 @@ workflows:
   test:
     jobs:
       # These tests are long, so should be started first to optimize for total suite run time
-      - py38-integration
-      - py37-integration
-      - py38-wheel-cli
-      - py37-wheel-cli
-      - py37-long_run_integration
-      - py37-rpc-state-sstore
       - py38-eth2-core
       - py37-eth2-core
 
-      - py37-docs
-
-      - py37-eth1-core
-      - py37-p2p
-      - py37-p2p-trio
       - py37-eth2-utils
       - py37-eth2-fixtures
       - py37-eth2-integration
       - py37-eth2-components
-      - py37-eth1-components
       - py37-eth2-trio
 
-      - py37-rpc-state-quadratic
-      - py37-rpc-state-zero_knowledge
-
-      - py37-rpc-state-byzantium
-      - py37-rpc-state-constantinople
-      - py37-rpc-state-frontier
-      - py37-rpc-state-homestead
-      - py37-rpc-state-istanbul
-      - py37-rpc-state-petersburg
-      - py37-rpc-state-spurious_dragon
-      - py37-rpc-state-tangerine_whistle
-      - py37-rpc-state-fork-transition
-
-      - py38-eth1-core
-      - py38-p2p
-      - py38-p2p-trio
       - py38-eth2-utils
       - py38-eth2-fixtures
       - py38-eth2-integration
-      - py38-eth1-components
+      - py38-eth2-components
       - py38-eth2-trio
 
-      - py37-sync_integration
-
       - py38-lint
-      - py38-lint-eth2
       - py37-lint
-      - py37-lint-eth2
 
-      - docker-trinity-image-build-test
       - docker-trinity-beacon-image-build-test

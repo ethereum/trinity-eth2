@@ -3,6 +3,8 @@ import logging
 
 import argcomplete
 from async_service.trio import background_trio_service
+from trinity._utils.trio_utils import wait_for_interrupts
+from trinity.cli_parser import parser, subparser
 
 from eth2.clock import Clock
 from eth2.validator_client.beacon_node import BeaconNode
@@ -10,8 +12,6 @@ from eth2.validator_client.client import Client
 from eth2.validator_client.config import Config
 from eth2.validator_client.key_store import KeyStore
 from eth2.validator_client.tools.password_providers import terminal_password_provider
-from trinity._utils.trio_utils import wait_for_interrupts
-from trinity.cli_parser import parser, subparser
 
 IMPORT_PARSER_HELP_MSG = (
     "import a validator private key to the keystore discovered from the configuration"
